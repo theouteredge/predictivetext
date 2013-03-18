@@ -1,0 +1,31 @@
+<html>
+	<head>
+		<script src="jquery-1.7.2.min.js"></script>
+		<script src="predictiveText.js"></script>
+
+		<link href="predictiveText.css" rel="stylesheet" type="text/css" />
+
+		<script>
+			$(document).ready(function() {
+				$("#predicitive").predictiveText({ data: [
+					{ data: "wfc:InputFileName", text: "InputFileName" }, 
+					{ data: "wfc:InputFilePath", text: "InputFilePath" }, 
+					{ data: "wfc:InputFileDirectory", text: "InputFileDirectory" }
+				] });
+			});
+		</script>
+	</head>
+
+	<body>
+		<h1>Predictive Text Demo</h1>
+
+		<form id="demo">
+			<div id="field-container">
+				<input type="text" name="predictive" id="predicitive" />
+			</div>
+			<div>
+				<input type="text" name="bob" id="bob" />
+			</div>
+		</form>
+	</body>
+</html>

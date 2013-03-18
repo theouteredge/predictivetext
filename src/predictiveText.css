@@ -1,0 +1,19 @@
+#predictivetext {
+	position: absolute;
+	width: 400px;
+	height: 200px;
+	overflow: auto;
+}
+
+#predictivetext ul {
+	list-style-type: none;
+    margin: 0;
+    padding: 1px;
+}
+
+#predictivetext ul li {
+	//display: inline-block;
+	margin-top: 2px;
+	background-color: #ddd;
+	padding: 5px;
+}
