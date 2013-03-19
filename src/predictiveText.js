@@ -65,19 +65,7 @@ Array.prototype.where = function (fun) {
 			options.selector = $(this).selector;
 
 
-		// fires we someone clicks on an item
-		$("#predictivetext ul li").live('click', function() {
-			var text     = $(options.selector).val();
-			var carot    = $(options.selector).caretPosition();
-			var position = text.reverseFind(options.seperator);
-
-			var start = text.substring(0, position);
-			var end = text.substring(carot, text.length);
-
-			$(options.selector).val("{0}{{1}}{2}".format(start, $(this).attr("data"), end));
-
-			removePredictions();
-		});
+		
 
 		function queryData(query) {
 			var results = options.data.where(function(item) {
@@ -103,6 +91,10 @@ Array.prototype.where = function (fun) {
 
 			// will only work with textboxes or textareas
 			if (item.is('input:text') || item.is('textarea')) {
+				$(item).on('blur', function() {
+					setTimeout(removePredictions, 850); // make sure that we don't kill the list before a click event on a list item fires.
+				});
+
 				$(item).on('keyup', function(e) {
 					if (e.keyCode === 27) {
 						removePredictions();
@@ -131,8 +123,21 @@ Array.prototype.where = function (fun) {
 								$("#predictivetext ul").append("<li data='{1}'>{0}</li>".format(results[i].text, results[i].data ? results[i].data : results[i].text));
 							}
 
+							// fires the events when someone clicks on an item
+							$("#predictivetext ul li").on('click', function() {
+								var text     = item.val();
+								var carot    = item.caretPosition();
+								var position = text.reverseFind(options.seperator);
+
+								var start = text.substring(0, position);
+								var end = text.substring(carot, text.length);
+
+								item.val("{0}{1}{2}".format(start, $(this).attr("data"), end));
+
+								removePredictions();
+							});
+
 						}, 800);
-						
 					}
 				});
 			}

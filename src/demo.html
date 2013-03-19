@@ -8,10 +8,24 @@
 		<script>
 			$(document).ready(function() {
 				$("#predicitive").predictiveText({ data: [
-					{ data: "wfc:InputFileName", text: "InputFileName" }, 
-					{ data: "wfc:InputFilePath", text: "InputFilePath" }, 
-					{ data: "wfc:InputFileDirectory", text: "InputFileDirectory" }
+					{ data: "{wfc:InputFileName}", text: "InputFileName" }, 
+					{ data: "{wfc:InputFilePath}", text: "InputFilePath" }, 
+					{ data: "{wfc:InputFileDirectory}", text: "InputFileDirectory" }
 				] });
+
+				$("#predictive2").predictiveText({ data: [
+					{ data: "{wfc:InputFileName}", text: "InputFileName" }, 
+					{ data: "{wfc:InputFilePath}", text: "InputFilePath" }, 
+					{ data: "{wfc:InputFileDirectory}", text: "InputFileDirectory" }
+				] });
+
+
+				$("#multiple input:text").predictiveText({ data: [
+					{ data: "{wfc:InputFileName}", text: "InputFileName" }, 
+					{ data: "{wfc:InputFilePath}", text: "InputFilePath" }, 
+					{ data: "{wfc:InputFileDirectory}", text: "InputFileDirectory" }
+				] });
+
 			});
 		</script>
 	</head>
@@ -25,6 +39,18 @@
 			</div>
 			<div>
 				<input type="text" name="bob" id="bob" />
+			</div>
+			<div>
+				<input type="text" name="predictive2" id="predictive2" />
+			</div>
+
+			<div id="multiple" style="background: #eee;">
+				<div>
+					<input type="text" name="predictive3" id="predictive3" />
+				</div>
+				<div>
+					<input type="text" name="predictive4" id="predictive4" />
+				</div>
 			</div>
 		</form>
 	</body>
