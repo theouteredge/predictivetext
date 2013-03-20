@@ -26,6 +26,13 @@
 					{ data: "{wfc:InputFileDirectory}", text: "InputFileDirectory" }
 				] });
 
+
+				$("#inline input:text").predictiveText({ data: [
+					{ data: "{wfc:InputFileName}", text: "InputFileName" }, 
+					{ data: "{wfc:InputFilePath}", text: "InputFilePath" }, 
+					{ data: "{wfc:InputFileDirectory}", text: "InputFileDirectory" }
+				] });
+
 			});
 		</script>
 	</head>
@@ -46,12 +53,23 @@
 
 			<div id="multiple" style="background: #eee;">
 				<div>
+					<label for="predictive3">Predictive 3</label>
 					<input type="text" name="predictive3" id="predictive3" />
 				</div>
 				<div>
+					<label for="predictive4">Predictive 4</label>
 					<input type="text" name="predictive4" id="predictive4" />
 				</div>
 			</div>
+
+			<div id="inline" style="background: #ddd;">
+				<label for="predictive5">Predictive 5</label>
+				<input type="text" name="predictive5" id="predictive5" />
+				
+				<label for="predictive6">Predictive 6</label>
+				<input type="text" name="predictive6" id="predictive6" />
+			</div>
+
 		</form>
 	</body>
 </html>

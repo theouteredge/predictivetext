@@ -57,7 +57,9 @@ Array.prototype.where = function (fun) {
 		var defaults = {
 			selector: null,
 			seperator: "{",
-			terminator: "}"
+			terminator: "}",
+			topOffset: 5,
+			leftOffset: 5
 		};
 		var options = $.extend(defaults, options);
 
@@ -69,7 +71,7 @@ Array.prototype.where = function (fun) {
 
 		function queryData(query) {
 			var results = options.data.where(function(item) {
-				return item.text.indexOf(query) > -1;
+				return item.text.toLowerCase().indexOf(query.toLowerCase()) > -1;
 			});
 
 			return results;
@@ -116,12 +118,19 @@ Array.prototype.where = function (fun) {
 						delay = setTimeout(function() {
 							removePredictions();
 
-							$(options.selector).parent().append("<div id='predictivetext'></div>")
+							// create the list to hold our predictive items
+							item.parent().append("<div id='predictivetext'></div>")
 							$("#predictivetext").html("<ul></ul>");
 
 							for(var i = 0; i < results.length; i++) {
 								$("#predictivetext ul").append("<li data='{1}'>{0}</li>".format(results[i].text, results[i].data ? results[i].data : results[i].text));
 							}
+
+							// place the list under the textbox/area
+							var poistion = item.position();
+							$("#predictivetext").attr("style", "top: {0}px; left: {1}px; width: {2}px;".format(poistion.top + item.height() + options.topOffset, poistion.left + options.leftOffset, 
+								item.width() > $("#predictivetext").width() ? item.width() : $("#predictivetext").width()));
+
 
 							// fires the events when someone clicks on an item
 							$("#predictivetext ul li").on('click', function() {
