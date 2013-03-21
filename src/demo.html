@@ -1,6 +1,7 @@
 <html>
 	<head>
-		<script src="jquery-1.7.2.min.js"></script>
+		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+		<script src="scrollintoview.js"></script>
 		<script src="predictiveText.js"></script>
 
 		<link href="predictiveText.css" rel="stylesheet" type="text/css" />
@@ -11,27 +12,36 @@
 					{ data: "{wfc:InputFileName}", text: "InputFileName" }, 
 					{ data: "{wfc:InputFilePath}", text: "InputFilePath" }, 
 					{ data: "{wfc:InputFileDirectory}", text: "InputFileDirectory" }
-				] });
+				], debug: true });
 
 				$("#predictive2").predictiveText({ data: [
 					{ data: "{wfc:InputFileName}", text: "InputFileName" }, 
 					{ data: "{wfc:InputFilePath}", text: "InputFilePath" }, 
 					{ data: "{wfc:InputFileDirectory}", text: "InputFileDirectory" }
-				] });
+				], debug: true });
 
 
 				$("#multiple input:text").predictiveText({ data: [
 					{ data: "{wfc:InputFileName}", text: "InputFileName" }, 
 					{ data: "{wfc:InputFilePath}", text: "InputFilePath" }, 
 					{ data: "{wfc:InputFileDirectory}", text: "InputFileDirectory" }
-				] });
+				], debug: true });
 
 
 				$("#inline input:text").predictiveText({ data: [
 					{ data: "{wfc:InputFileName}", text: "InputFileName" }, 
 					{ data: "{wfc:InputFilePath}", text: "InputFilePath" }, 
-					{ data: "{wfc:InputFileDirectory}", text: "InputFileDirectory" }
-				] });
+					{ data: "{wfc:InputFileDirectory}", text: "InputFileDirectory" },
+					{ data: "{wfc:InputFile1}", text: "InputFile1" }, 
+					{ data: "{wfc:InputFile2}", text: "InputFile2" }, 
+					{ data: "{wfc:InputFile3}", text: "InputFile3" },
+					{ data: "{wfc:InputFile4}", text: "InputFile4" }, 
+					{ data: "{wfc:InputFile5}", text: "InputFile5" }, 
+					{ data: "{wfc:InputFile6}", text: "InputFile6" },
+					{ data: "{wfc:InputFile7}", text: "InputFile7" }, 
+					{ data: "{wfc:InputFile8}", text: "InputFile8" }, 
+					{ data: "{wfc:InputFile9}", text: "InputFile9" }
+				], debug: true });
 
 			});
 		</script>
@@ -65,7 +75,7 @@
 			<div id="inline" style="background: #ddd;">
 				<label for="predictive5">Predictive 5</label>
 				<input type="text" name="predictive5" id="predictive5" />
-				
+
 				<label for="predictive6">Predictive 6</label>
 				<input type="text" name="predictive6" id="predictive6" />
 			</div>

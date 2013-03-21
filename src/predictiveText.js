@@ -59,7 +59,10 @@ Array.prototype.where = function (fun) {
 			seperator: "{",
 			terminator: "}",
 			topOffset: 5,
-			leftOffset: 5
+			leftOffset: 5,
+			debug: false,
+			inputBox: null,
+			caretPosition: 0
 		};
 		var options = $.extend(defaults, options);
 
@@ -67,9 +70,13 @@ Array.prototype.where = function (fun) {
 			options.selector = $(this).selector;
 
 
+		// track which input boxes have the focus
+		$('input').on('focus', function() {
+			options.inputBox = $(this);
+		});
 		
 
-		function queryData(query) {
+		var queryData = function (query) {
 			var results = options.data.where(function(item) {
 				return item.text.toLowerCase().indexOf(query.toLowerCase()) > -1;
 			});
@@ -77,13 +84,70 @@ Array.prototype.where = function (fun) {
 			return results;
 		}
 
-		function removePredictions() {
+		var removePredictions = function () {
 			var parent = $(options.selector).parent();
 			var predictivetextDiv = parent.find("#predictivetext");
 
 			predictivetextDiv.remove();
 		}
 
+		var elementSelected = function (item) {
+			if (options.inputBox === null || options.inputBox === undefined)
+				return;
+
+			var text = options.inputBox.val();
+			if (text === undefined) {
+				removePredictions();
+				return;
+			}
+
+			var position = text.reverseFind(options.seperator);
+			var start = text.substring(0, position);
+			var end = text.substring(options.caretPosition, text.length);
+
+			options.inputBox.val("{0}{1}{2}".format(start, item.attr("data"), end));
+			removePredictions();
+		}
+
+
+		var handleKeyPress = function handleKeyPress(e) {
+			switch(e.keyCode) {
+				case 27: // esc
+					removePredictions();
+					return true;
+
+				case 38: // up
+					var index = $('#predictivetext ul li.selected').index();
+					if (index >= 1)
+					{
+						// nth-child is 1 based index, not 0 based index
+						$('#predictivetext ul li.selected').removeClass();
+						$('#predictivetext ul li:nth-child({0})'.format(index)).addClass('selected');
+					}
+					
+					$('#predictivetext ul li.selected').scrollintoview();
+
+					return true;
+
+				case 40: // down
+					var index = $('#predictivetext ul li.selected').index();
+					if (index+1 < $('#predictivetext ul li').length)
+					{
+						// nth-child has 1 based index, not 0 based index
+						$('#predictivetext ul li.selected').removeClass();
+						$('#predictivetext ul li:nth-child({0})'.format(index + 2)).addClass('selected');
+					}
+
+					$('#predictivetext ul li.selected').scrollintoview();
+
+					return true;
+
+				case 13:
+					elementSelected($('#predictivetext ul li.selected'));
+					return true;
+			}
+			return false;
+		}
 
 		var delay;
 	
@@ -94,24 +158,26 @@ Array.prototype.where = function (fun) {
 			// will only work with textboxes or textareas
 			if (item.is('input:text') || item.is('textarea')) {
 				$(item).on('blur', function() {
-					setTimeout(removePredictions, 850); // make sure that we don't kill the list before a click event on a list item fires.
+					if (!options.debug)
+					 	setTimeout(removePredictions, 850); // make sure that we don't kill the list before a click event on a list item fires.
 				});
 
 				$(item).on('keyup', function(e) {
-					if (e.keyCode === 27) {
-						removePredictions();
-						return;
-					}
+					if (handleKeyPress(e))
+						return false; // we've handled the key press, so quit out
 
 					var text = item.val();
-					var caret = item.caretPosition();
+					options.caretPosition = item.caretPosition();
 
 					// is one of the previous characters a seperator?
 					var lead = text.reverseFind(options.seperator);
 					if (lead > text.reverseFind(options.terminator)) {
 						// we have a seperator (which hasn't been terminated yet) before the carot, so we can display our list of data
-						var query = text.substring(lead+1, caret);
+						var query = text.substring(lead+1, options.caretPosition);
 						var results = query === "" || query === undefined ? options.data : queryData(query); // use the text between the seperator and carot as the query
+
+						if (results === undefined || results === null || results.length === 0)
+							return; // we have nothing to display
 
 						// display the results...
 						clearTimeout(delay);
@@ -123,7 +189,10 @@ Array.prototype.where = function (fun) {
 							$("#predictivetext").html("<ul></ul>");
 
 							for(var i = 0; i < results.length; i++) {
-								$("#predictivetext ul").append("<li data='{1}'>{0}</li>".format(results[i].text, results[i].data ? results[i].data : results[i].text));
+								if (i === 0)
+									$("#predictivetext ul").append("<li data='{1}' class='selected'>{0}</li>".format(results[i].text, results[i].data ? results[i].data : results[i].text));
+								else
+									$("#predictivetext ul").append("<li data='{1}'>{0}</li>".format(results[i].text, results[i].data ? results[i].data : results[i].text));
 							}
 
 							// place the list under the textbox/area
@@ -134,16 +203,7 @@ Array.prototype.where = function (fun) {
 
 							// fires the events when someone clicks on an item
 							$("#predictivetext ul li").on('click', function() {
-								var text     = item.val();
-								var carot    = item.caretPosition();
-								var position = text.reverseFind(options.seperator);
-
-								var start = text.substring(0, position);
-								var end = text.substring(carot, text.length);
-
-								item.val("{0}{1}{2}".format(start, $(this).attr("data"), end));
-
-								removePredictions();
+								elementSelected($(this));
 							});
 
 						}, 800);

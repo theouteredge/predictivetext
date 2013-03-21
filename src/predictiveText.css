@@ -3,17 +3,27 @@
 	width: 400px;
 	height: 200px;
 	overflow: auto;
+    z-index: 1000;
 }
 
 #predictivetext ul {
 	list-style-type: none;
     margin: 0;
     padding: 1px;
+    background: #eee;
 }
 
 #predictivetext ul li {
-	//display: inline-block;
+	/* display: inline-block;*/
 	margin-top: 2px;
 	background-color: #ddd;
 	padding: 5px;
+}
+
+#predictivetext ul li:hover {
+    cursor: pointer;
+}
+
+#predictivetext ul li.selected {
+    background: #1BA1E2;
 }
